@@ -1,0 +1,27 @@
+body {
+	font-family: Verdana, Geneva, sans-serif;
+	background-color: #dacea4;
+	color : #535f5f;
+	width : 50%;
+	margin-left : 10%;
+}
+
+h1 {
+	color: #cb4b16;
+	margin-left: 20px;
+	text-align: center;
+}
+
+h2 {
+	color: #268bd2;
+	text-align: left;
+}
+
+a {
+	color: #268bd2;
+}
+
+img {
+    width: 50%;
+    margin: auto;
+}

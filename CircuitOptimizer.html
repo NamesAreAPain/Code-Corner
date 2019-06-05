@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> Circuit Optimizer</title>
+        <link rel="stylesheet" type="text/css" href="jccw.css">
+    </head>
+    <body>
+        <h1> Circuit Solver </h1>
+        <p> After finishing my finals, I was lounging in the Electrical Engineering lab, accompanying my friend as he desperately tried to finish an Electronics design assignment. I had some experience in the SPICE circuit simulator, and figured there ought to be some way to solve for component values. Turns out, non-linear, multivariable, arbitrary solvers are a little more complicated than could easily be managed in pure SPICE. I had been tinkering with the Julia programming language, and decided I could make a nice and generalizable solution. </p>
+        <p> The first step of the project involves parsing a config file, in order to get a list of what components to modify, and what resulting simulation results should be optimized for, in addition to some miscellaneous control options. Initially I tried hand-rolling my own configuration file format and parser, but it occured to me that I was sinking a lot of unnecessary time and effort into making a JSON or YAML clone. So I chose a YAML-parsing package instead.</p>
+        <p> The second step was parsing a SPICE netlist, scrape out the initial values for the independant variables, and produce a function which takes a set of values and produces a modified netlist. This step used some fun Regex. </p>
+        <p> Once that was done, the tricky part came along: interfacing with the command line ngSPICEutility. For every possible optimization target, I had to derive a measurement to make in the simulation, which was constructed into a control block, piped to ngSPICE, the results of which are piped back into Julia and parsed to find the resulting values. The values are then fed into the user-defined objective function, and a score is derived. </p>
+        <p> The next step in the process is going to be to couple my scoring program with the multivariable solving package JuMP, in order to actaully solve for compoenent values. </p>

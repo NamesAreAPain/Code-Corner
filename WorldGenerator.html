@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> World Generator</title>
+        <link rel="stylesheet" type="text/css" href="jccw.css">
+    </head>
+    <body>
+        <h1> World Generator</h1>
+        <p> This project was first conceived as an attempt at building a simulator for a Medieval economy. Although the economic portion of the game never left the realm of detailed database specifications, I did end up with a pretty cool world generator. The method was inspired by <a href="https://mewo2.com/notes/terrain/"> this </a> article. Additionally, this project was my first forray into the Maven build tool, which I used to handle the libraries used for some of the more complicated computational geometry.</p>
+        <p> Rather than generating the world as a collection of points on a grid, this program uses randomly distributed points, avoiding the artifacts that manifest in the cardinal directions on a square grid. Rather than truly randomly placed points (white noise), it uses blue noise, as it makes for nice, evenly spaced points. In order to generate these, the program begins with a white noise arrangement of points. Then, the program goes through 5 rounds of Lloyd relaxation, iteratively sliding the points into a more even distribution. For a set of points, the Delauney Triangulation and Vornoi tesselations are calculated. The Delauney triangluation involves selecting edges such that no non-edge points are with the circumcircle of any triangle. See below. </p>
+        <div> <img src="triangles.png" alt="Delauney Traingles"> </div>
+        <p> The other representation is the Voronoi tesselation. It consists of polygons which have the property that at any arbitrary point within the polygon, the closest seed point is the one inside the polygon. See below. </p>
+        <div> <img src="points.jpg" alt = "Voronoi Polygons"> </div>
+        <p> Next, basic archetypes are applied to the heightmap. A slant from one side to another, or or towards a ridge, and some gaussian lumps generally lead to a good result. An example topographic map can be seen below. </p>
+        <div> <img src="preErosion.png" alt = "Pre Erosion Topography"> </div>
+        <p> Then, the map gets weathered by an erosion process based on a simulated watershed. Rain is applied in a configurable pattern (I only got around to implementing even rainfall, but there is a WIP model for rainshadows), and flows down, eroding points it's flowing through, and depositing sediment where it pools. This serves to smooth out some of the more unsightly edges, and give the shorelines a nice ragged profile.
+        <div> <img src="topo3.png" alt = "Post Erosion"> </div>
+        <p> Here are a few of my favorite landscapes I've generated: </p>
+        <div> <img src="topo.png" alt = "Post Erosion"> </div>
+        <p> I like this one because it kind of looks kind of like a fjord. You've got cliffs, you've got an inlet, there's even a little sandbar. </p>
+        <div> <img src="topo2.png" alt = "Post Erosion"> </div>
+        <p> This one has some cool cliffs as well, in addition to a nice sloping hillside towards the sea. I think I'd like a cabin on these shores. </p>
+    </body>
+</html>
