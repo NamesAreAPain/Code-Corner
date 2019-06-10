@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> James Crocker</title>
+        <link rel="stylesheet" type="text/css" href="jccw.css">
+    </head>
+    <body>
+        <h1> A Testing Page For Langton's Ant </h1>
+        
+        <p id="stepNumber"></p>
+        <canvas id="myCanvas" width="400" height="400" style="border:1px solid #000000;">
+            YOU ARE LIVING IN THE PAST
+        </canvas>
+        <div></div>
+        <button type="button" onclick="runAnt();" > RUN </button>
+        <button type="button" onclick="stopAnt();"> STOP </button>
+        <button type="button" onclick="contAnt();"> CONTINUE </button>
+        <form>
+            ms/step: <input id="time" type="number" name="time" value=100> 
+        </form>
+        <button type="button" onclick="stepTime = (document.getElementById('time').value)"> Set Speed </button>
+        <div></div>
+        
+        <ol id="SequenceBuilder"> 
+            INSTRUCTION SEQUENCE
+            <li id=seq1>
+                <form> 
+                    <select name="dir1">
+                        <option value=0> Forward </option>
+                        <option value=1> Slight Left </option>
+                        <option value=2> Left </option>
+                        <option value=3> Hard Left </option>
+                        <option value=4> About Face </option>
+                        <option value=5> Hard Right </option>
+                        <option value=6> Right </option>
+                        <option value=7> Slight Right </option>
+                    </select>
+                    <input type="color" name="col1" value="#ff0000">
+                    </br>
+                </form>
+            </li>
+        </ol>
+        <button type="button" onclick="expandDirForm()"> ADD DIRECTION </button>
+        <script>
+
+"use strict";
+var stepCounter = 0;
+var stepTime = 100;
+var stop = true;
+var pausedModel = undefined;
+var steps = [
+    [0,1],
+    [-1,1],
+    [-1,0],
+    [-1,-1],
+    [0,-1],
+    [1,-1],
+    [1,0],
+    [1,1],
+    ];
+
+function getPixelDrawer (canvasID,xpxs,ypxs) {
+    
+    let a_canvas = document.getElementById(canvasID);
+    let a_ctx = a_canvas.getContext("2d");
+
+    let w = a_canvas.width;
+    let h = a_canvas.height;
+    
+    let w_off = xpxs/2 | 0;
+    let h_off = ypxs/2 | 0;
+    
+    function drawpixel(x,y,color){
+        a_ctx.fillStyle = color;
+        a_ctx.fillRect((x + w_off)*w/xpxs, (y + h_off)*h/ypxs,w/xpxs,h/ypxs);
+    }
+
+    a_ctx.clearRect(0,0,w,h);
+
+    return drawpixel;
+}
+
+function automata(dirOrder,colOrder,canvasID,xpxs,ypxs){
+    let pixdict = {};
+    let drawpixel = getPixelDrawer(canvasID,xpxs,ypxs);
+    let loc = [0,0];
+    let dir = 0;
+    let countspot = document.getElementById("stepNumber");
+
+    function antStep() {
+        stepCounter++;
+        countspot.innerHTML = stepCounter;
+        if(pixdict[loc] == undefined){
+            pixdict[loc] = 0;
+        }
+        pixdict[loc] = (pixdict[loc] + 1 ) % dirOrder.length;
+        drawpixel(loc[0],loc[1],colOrder[pixdict[loc]]);
+        dir = (dir + dirOrder[pixdict[loc]] )%8;
+        let step = steps[dir];
+        loc[0] = loc[0] + step[0];
+        loc[1] = loc[1] + step[1];
+        if ((Math.abs(loc[0]) > (xpxs/2 | 0 )) ||  (Math.abs(loc[1]) > (ypxs/2 | 0 ) )) {
+            xpxs = 3*xpxs;
+            ypxs = 3*ypxs;
+            drawpixel = getPixelDrawer(canvasID,xpxs,ypxs);
+            for (let key in pixdict) {
+                let v = pixdict[key];
+                let l = key.split(",").map(x=> parseInt(x));
+                drawpixel(l[0],l[1],colOrder[v]);
+            }
+        }
+        if(stop){
+            pausedModel = antStep;
+        } else {
+            setTimeout(antStep,stepTime);
+        }
+    }
+    antStep();
+}
+function list2dircol(){
+    let seq = document.getElementById("SequenceBuilder");
+    let seqNodes = seq.children;
+    let out = {"dirs":[],"cols":[]};
+    for (let nodeindex = 0; nodeindex <seqNodes.length; nodeindex++){
+        console.log(nodeindex);
+        let node = seqNodes[nodeindex];
+        let dirNode = node.children[0].children[0];
+        let colNode = node.children[0].children[1];
+        out.dirs.push(parseInt(dirNode.value));
+        out.cols.push(colNode.value);
+    }
+    return out;
+}
+
+function runAnt(){
+    if(stop){
+        stop = false;
+        let dircol = list2dircol();
+        automata(dircol.dirs,dircol.cols,"myCanvas",3,3);
+    }
+}
+function stopAnt(){
+    stop = true;
+}
+function contAnt(){
+    if(stop){
+        stop = false;
+        pausedModel();
+    }
+}
+function expandDirForm(){
+    let seqlist = document.getElementById("SequenceBuilder");
+    let form1 = document.getElementById("seq1");
+    let form2 = form1.cloneNode(true);
+    seqlist.appendChild(form2);
+}
+
+        </script> 
+    </body>
+</html>
