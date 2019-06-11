@@ -134,6 +134,7 @@ function list2dircol(){
 
 function runAnt(){
     if(stop){
+        stepCounter = 0;
         stop = false;
         let dircol = list2dircol();
         automata(dircol.dirs,dircol.cols,"myCanvas",3,3);
