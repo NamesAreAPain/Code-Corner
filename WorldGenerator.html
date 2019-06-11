@@ -6,6 +6,12 @@
     </head>
     <body>
         <h1> World Generator</h1>
+        <table width=100%; class="titlepics"> 
+            <tr>
+                <td text-align=center; > <div> <img src="topo.png" alt = "Post Erosion"> </div> </td>
+                <td> <div> <img src="topo2.png" alt = "Post Erosion"> </div> </td>
+            </tr>
+        </table>
         <p> This project was first conceived as an attempt at building a simulator for a Medieval economy. Although the economic portion of the game never left the realm of detailed database specifications, I did end up with a pretty cool world generator. The method was inspired by <a href="https://mewo2.com/notes/terrain/"> this </a> article. Additionally, this project was my first forray into the Maven build tool, which I used to handle the libraries used for some of the more complicated computational geometry.</p>
         <p> Rather than generating the world as a collection of points on a grid, this program uses randomly distributed points, avoiding the artifacts that manifest in the cardinal directions on a square grid. Rather than truly randomly placed points (white noise), it uses blue noise, as it makes for nice, evenly spaced points. In order to generate these, the program begins with a white noise arrangement of points. Then, the program goes through 5 rounds of Lloyd relaxation, iteratively sliding the points into a more even distribution. For a set of points, the Delauney Triangulation and Vornoi tesselations are calculated. The Delauney triangluation involves selecting edges such that no non-edge points are with the circumcircle of any triangle. See below. </p>
         <div> <img src="triangles.png" alt="Delauney Traingles"> </div>
