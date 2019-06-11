@@ -2,7 +2,7 @@
 deployment :
     tasks :
         - export DEPLOYPATH=/home/jamiesco/public_html/
-        - /bin/cp -f \*.html $DEPLOYPATH 
-        - /bin/cp -f \*.css $DEPLOYPATH
-        - /bin/cp -f \*.jpg $DEPLOYPATH
-        - /bin/cp -f \*.png $DEPLOYPATH
+        - "/bin/cp -f *.html $DEPLOYPATH"
+        - "/bin/cp -f *.css $DEPLOYPATH"
+        - "/bin/cp -f *.jpg $DEPLOYPATH"
+        - "/bin/cp -f *.png $DEPLOYPATH"
